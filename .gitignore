@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Tier 0: plan, research notes, learning log
+planning/
+# Downloaded datasets (Kaggle terms: never redistributed)
+data/

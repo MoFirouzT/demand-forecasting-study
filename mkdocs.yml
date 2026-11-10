@@ -1,0 +1,6 @@
+site_name: A study of demand forecasting methods
+repo_url: https://github.com/MoFirouzT/demand-forecasting-study
+theme:
+  name: material
+exclude_docs: |
+  _TEMPLATE.md
