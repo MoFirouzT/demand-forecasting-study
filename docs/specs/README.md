@@ -29,7 +29,7 @@ ledger row: a row records what was found, and an unbuilt unit has found nothing.
 
 | Work order | Label | Status | What it proposes |
 | --- | --- | --- | --- |
-| | | | |
+| [evaluation-harness](evaluation-harness.md) | none | Draft | Score forecasts as the protocol defines: backtest, demand classes, metrics, order simulation, bootstrap |
 
 ---
 

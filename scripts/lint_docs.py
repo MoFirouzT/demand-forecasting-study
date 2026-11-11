@@ -189,7 +189,8 @@ REAL_ADJECTIVES = {
 # it, so it cannot accrete. Verify with an empty dictionary, which is a lower bound on
 # any runner's:  WORD_LIST= python3 scripts/lint_docs.py
 REPO_VOCABULARY = {
-    "checkable", "executable", "indistinguishable", "negotiable", "probability",
+    "checkable", "executable", "indistinguishable", "negotiable", "perishable",
+    "probability",
 }
 REAL_ADJECTIVES |= REPO_VOCABULARY
 CHECK_COINED_WORDS = True
@@ -263,6 +264,12 @@ DEPENDS_LINE = re.compile(r"\*\*Depends on:\*\*(.*)")
 
 SPECS = sorted(SPEC_DIR.glob("*.md")) if SPEC_DIR.exists() else []
 SPEC_FILES = [p for p in SPECS if p.name not in SPEC_EXEMPT]
+
+
+def _spec_status(path: Path) -> str:
+    """The word after `**Status:**` in a spec, or "" if it has none."""
+    m = re.search(r"^\*\*Status:\*\*\s*(\w+)", path.read_text(encoding="utf-8"), re.M)
+    return m.group(1) if m else ""
 
 
 def _narrates_change(path: Path) -> bool:
@@ -488,6 +495,9 @@ def main() -> int:
     for path in DOC_PATHS + TIER0_PATHS:
         tier0 = path in TIER0_PATHS
         lines = path.read_text(encoding="utf-8").splitlines()
+        # A spec names the modules it will create, so its code references are checked
+        # only once it says the code exists.
+        built = path in SPEC_FILES and _spec_status(path) == "Implemented"
 
         if not tier0 and len(lines) > MAX_LINES and rel(path) not in LINE_CAP_EXEMPT:
             errors.append(
@@ -559,7 +569,7 @@ def main() -> int:
                         f"{rel(path)}:{n}: stale instruction {match.group(0)!r}; "
                         "if it is done, say what is, and point at it"
                     )
-                if CODE_REF is not None:
+                if CODE_REF is not None and built:
                     for match in CODE_REF.finditer(line):
                         if not _module_exists(match.group(1)):
                             errors.append(

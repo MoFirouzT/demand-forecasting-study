@@ -22,7 +22,8 @@ an append-only record inside it grows without bound.
 
 ## Next
 
-- Add demand classes and metrics to `docs/protocol.md` (plan days 3–4).
+- Write the evaluation harness in `dfstudy.evaluation`: backtest, demand classes, metrics,
+  order simulation, bootstrap (plan days 2–3).
 
 ## Known blockers
 

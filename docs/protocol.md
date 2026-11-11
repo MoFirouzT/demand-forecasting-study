@@ -42,6 +42,52 @@ the demand classes, the metrics, and the bars for "better". The evaluation code 
   at 1773 and 1801.
 - Every model, scale and demand-class label is fitted on data up to its origin only.
 
+## Demand classes
+
+- Each series gets one class per origin, from its sales between its first sale and the
+  origin ([Syntetos, Boylan & Croston, 2005](https://doi.org/10.1057/palgrave.jors.2601841)).
+- ADI = days in that span / days with a sale.
+- CV² = (σ_z / μ_z)², where z is a day's sales on days with a sale, and σ_z divides by
+  their count.
+- Smooth: ADI < 1.32 and CV² < 0.49. Erratic: ADI < 1.32 and CV² ≥ 0.49.
+  Intermittent: ADI ≥ 1.32 and CV² < 0.49. Lumpy: ADI ≥ 1.32 and CV² ≥ 0.49.
+- A series with no sale before the origin is classed "no history" and reported apart.
+
+## Metrics
+
+Every metric is computed per series and origin, then reported overall and per demand class.
+
+Point forecast (the mean):
+
+- WRMSSE, as in M5, overall only. RMSSE per series = √(mean squared error over the window /
+  mean squared one-step naive difference from first sale to origin).
+- Per class: RMSSE averaged over the class's series, weighted by dollar sales in the 28 days
+  before the origin.
+- Bias = Σŷ / Σy − 1 over the series and days in the group.
+- WAPE = Σ|y − ŷ| / Σy, as a secondary figure. WAPE is lowest for the median, not the mean.
+
+Quantiles:
+
+- Pinball loss at each q of the decision sweep, divided per series by the mean absolute
+  one-step naive difference from first sale to origin
+  ([M5 uncertainty competition](https://doi.org/10.1016/j.ijforecast.2021.10.009)).
+  Series count equally.
+- CRPS ≈ (2/99) Σ L_q over q = 0.01, …, 0.99, scaled the same way
+  ([Gneiting & Raftery, 2007](https://doi.org/10.1198/016214506000001437)).
+- Coverage at each q: the share of item-days with y ≤ ŷ^(q). On count data a correct
+  q-quantile covers at least q.
+- Every method outputs a mean and the 99 quantiles.
+
+Decision:
+
+- Order cost and fill rate (units sold / units demanded) from the order simulation.
+- One day, leftovers discarded: q = c_u / (c_u + c_o), where c_o is the cost of one unsold
+  unit, and (c_u + c_o)·L_q(y, S) = c_u(y − S)⁺ + c_o(S − y)⁺, where (x)⁺ = max(x, 0). The
+  day's order cost is pinball loss at q, scaled.
+
+A series whose scale is zero is left out of the scaled metrics, and the count left out is
+reported.
+
 ## The questions
 
 1. On full M5, how do pretrained models that take covariates (Chronos-2, TiRex-2) compare
