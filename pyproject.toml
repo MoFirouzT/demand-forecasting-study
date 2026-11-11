@@ -18,6 +18,11 @@ dev = [
 docs = [
     "mkdocs-material",
 ]
+data = [
+    "huggingface-hub",
+    "kaggle",
+    "six",  # kaggle imports it without declaring it
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

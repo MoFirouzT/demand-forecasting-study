@@ -22,8 +22,7 @@ an append-only record inside it grows without bound.
 
 ## Next
 
-- Write `docs/protocol.md`: requirements, backtest, demand classes, metrics, bars.
-- Set up the data download.
+- Add demand classes and metrics to `docs/protocol.md` (plan days 3–4).
 
 ## Known blockers
 

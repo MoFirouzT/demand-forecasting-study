@@ -189,7 +189,7 @@ REAL_ADJECTIVES = {
 # it, so it cannot accrete. Verify with an empty dictionary, which is a lower bound on
 # any runner's:  WORD_LIST= python3 scripts/lint_docs.py
 REPO_VOCABULARY = {
-    "checkable", "executable", "indistinguishable", "negotiable",
+    "checkable", "executable", "indistinguishable", "negotiable", "probability",
 }
 REAL_ADJECTIVES |= REPO_VOCABULARY
 CHECK_COINED_WORDS = True
